@@ -112,7 +112,7 @@ public class Main {
                     System.out.println("Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY));
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
-                    String time = dateFormat.format(new Date()) + " - " + System.currentTimeMillis();
+                    String time = dateFormat.format(new Date());
 
                     EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("US Midterm Elections")
                             .appendField("House Race",
