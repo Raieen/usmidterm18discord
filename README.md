@@ -4,6 +4,6 @@ Discord bot that gets data from CNN and displays it in selected discord bots. Th
 
 Data from
 
-- [Data Source](https://www.cnn.com/politics/live-news/election-day-2018/index.html)
-- [Live Coverage of midterm](https://data.cnn.com/ELECTION/2018November6/bop/combined.json")
+- [Live Coverage of midterm](https://www.cnn.com/politics/live-news/election-day-2018/index.html)
+- [Data Source](https://data.cnn.com/ELECTION/2018November6/bop/combined.json)
 
