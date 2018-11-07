@@ -16,7 +16,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 /*
  * Quickly made Discord bot to view live results for the US 2018 Midterms.
  *
@@ -24,7 +23,7 @@ import java.util.*;
 public class Main {
 
     // Discord
-    public static String DISCORD_API_KEY = "";
+    public static String DISCORD_API_KEY;
     public static IDiscordClient discordClient;
     public static List<Long> DISCORD_CHANNEL_IDS = new ArrayList<>();
 
@@ -81,7 +80,7 @@ public class Main {
         JsonParser jsonParser = new JsonParser();
         if (response == null) return 0;
 
-        JsonObject jsonObject = jsonParser.parse(getJsonResponse()).getAsJsonObject();
+        JsonObject jsonObject = jsonParser.parse(response).getAsJsonObject();
 
         return jsonObject.get(race).getAsJsonObject().get(countKey).getAsInt();
     }
@@ -125,7 +124,11 @@ public class Main {
                     lastSenateDems = senateDems;
                     lastSenateReps = senateReps;
 
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+                    String time = dateFormat.format(new Date());
+
                     System.out.println("==========================");
+                    System.out.println(time);
                     System.out.println("House Race");
                     System.out.println("Dems: " + houseDems);
                     System.out.println("Reps: " + houseReps);
@@ -133,9 +136,6 @@ public class Main {
                     System.out.println("Senate Race");
                     System.out.println("Dems: " + senateDems);
                     System.out.println("Reps: " + senateReps);
-
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
-                    String time = dateFormat.format(new Date());
 
                     EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("US Midterm Elections")
                             .appendField("House Race",
@@ -150,7 +150,7 @@ public class Main {
                         sendMessage(channel, embedBuilder.build());
                     }
                 }
-            }, 1000, 1000 * 60 * 1); // Check every 5 mins.
+            }, 1000, 1000 * 60); // Check every 1 min.
         }
     }
 }
