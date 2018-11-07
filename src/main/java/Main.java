@@ -98,29 +98,52 @@ public class Main {
         public void onReady(ReadyEvent readyEvent) {
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
+
+                // Do this so only changes are displayed.
+                int lastHouseDems = 0;
+                int lastHouseReps = 0;
+
+                int lastSenateDems = 0;
+                int lastSenateReps = 0;
+
                 @Override
                 public void run() {
-
                     String response = getJsonResponse();
+
+                    int houseDems = getCount(response, HOUSE_KEY, DEM_COUNT_KEY);
+                    int houseReps = getCount(response, HOUSE_KEY, REP_COUNT_KEY);
+
+                    int senateDems = getCount(response, SENATE_KEY, DEM_COUNT_KEY);
+                    int senateReps = getCount(response, SENATE_KEY, REP_COUNT_KEY);
+
+                    if (houseDems == lastHouseDems && houseReps == lastHouseReps && senateDems == lastSenateDems && senateReps == lastSenateReps) {
+                        return; // No changes. So don't display anything.
+                    }
+
+                    lastHouseDems = houseDems;
+                    lastHouseReps = houseReps;
+                    lastSenateDems = senateDems;
+                    lastSenateReps = senateReps;
+
                     System.out.println("==========================");
                     System.out.println("House Race");
-                    System.out.println("Dems: " + getCount(response, HOUSE_KEY, DEM_COUNT_KEY));
-                    System.out.println("Reps: " + getCount(response, HOUSE_KEY, REP_COUNT_KEY));
+                    System.out.println("Dems: " + houseDems);
+                    System.out.println("Reps: " + houseReps);
 
                     System.out.println("Senate Race");
-                    System.out.println("Dems: " + getCount(response, SENATE_KEY, DEM_COUNT_KEY));
-                    System.out.println("Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY));
+                    System.out.println("Dems: " + senateDems);
+                    System.out.println("Reps: " + senateReps);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
                     String time = dateFormat.format(new Date());
 
                     EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("US Midterm Elections")
                             .appendField("House Race",
-                                    "Dems: " + getCount(response, HOUSE_KEY, DEM_COUNT_KEY) + "\n" +
-                                            "Reps: " + getCount(response, HOUSE_KEY, REP_COUNT_KEY), true)
+                                    "Dems: " + houseDems + "\n" +
+                                            "Reps: " + houseReps, true)
                             .appendField("Senate Race",
-                                    "Dems: " + getCount(response, SENATE_KEY, DEM_COUNT_KEY) + "\n" +
-                                            "Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY), true)
+                                    "Dems: " + senateDems + "\n" +
+                                            "Reps: " + senateReps, true)
                             .withFooterText(time).withUrl(COVERAGE);
 
                     for (long channel : DISCORD_CHANNEL_IDS) {
