@@ -79,7 +79,7 @@ public class Main {
         if (response == null) return 0;
 
         JsonObject jsonObject = jsonParser.parse(getJsonResponse()).getAsJsonObject();
-        
+
         return 0;
     }
 
