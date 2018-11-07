@@ -13,9 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /*
@@ -27,7 +26,7 @@ public class Main {
     // Discord
     public static String DISCORD_API_KEY = "";
     public static IDiscordClient discordClient;
-    public static List<Long> DISCORD_CHANNEL_IDS;
+    public static List<Long> DISCORD_CHANNEL_IDS = new ArrayList<>();
 
     // Data
     public static final String HOUSE_KEY = "H";
@@ -36,7 +35,7 @@ public class Main {
     public static final String DEM_COUNT_KEY = "d";
     public static final String REP_COUNT_KEY = "r";
     public static final String DATA_JSON = "https://data.cnn.com/ELECTION/2018November6/bop/combined.json";
-
+    public static final String COVERAGE = "https://www.cnn.com/politics/live-news/election-day-2018/index.html";
 
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -112,19 +111,23 @@ public class Main {
                     System.out.println("Dems: " + getCount(response, SENATE_KEY, DEM_COUNT_KEY));
                     System.out.println("Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY));
 
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+                    String time = dateFormat.format(new Date()) + " - " + System.currentTimeMillis();
+
                     EmbedBuilder embedBuilder = new EmbedBuilder().withTitle("US Midterm Elections")
                             .appendField("House Race",
                                     "Dems: " + getCount(response, HOUSE_KEY, DEM_COUNT_KEY) + "\n" +
                                             "Reps: " + getCount(response, HOUSE_KEY, REP_COUNT_KEY), true)
                             .appendField("Senate Race",
                                     "Dems: " + getCount(response, SENATE_KEY, DEM_COUNT_KEY) + "\n" +
-                                            "Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY), true);
+                                            "Reps: " + getCount(response, SENATE_KEY, REP_COUNT_KEY), true)
+                            .withFooterText(time).withUrl(COVERAGE);
 
                     for (long channel : DISCORD_CHANNEL_IDS) {
                         sendMessage(channel, embedBuilder.build());
                     }
                 }
-            }, 1000, 1000 * 60 * 5); // Check every 5 mins.
+            }, 1000, 1000 * 60 * 1); // Check every 5 mins.
         }
     }
 }
